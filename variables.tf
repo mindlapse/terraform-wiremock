@@ -7,6 +7,10 @@ variable "branch" {
   default = "master"
 }
 
+variable "aws_security_group" {
+  description = "The name of a security group in AWS with port 443 open and internet access"
+}
+
 variable "aws_secret_key" {
   description = "Your AWS secret key"
 }
