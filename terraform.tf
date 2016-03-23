@@ -12,5 +12,5 @@ resource "aws_instance" "wiremock" {
 }
 
 resource "aws_eip" "ip" {
-  instance = "${aws_instance.wiremock}"
+  instance = "${aws_instance.wiremock.id}"
 }
