@@ -7,10 +7,11 @@ provider "aws" {
 resource "aws_instance" "wiremock" {
   ami             = "${lookup(var.amis, var.region)}"
   instance_type   = "${var.instance_size}"
-  security_groups = ["ssh_group", "tls_group"]
+  security_groups = ["ssh_group", "web_group"]
+  key_name        = "${var.aws_ssh_key_name}"
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${aws_instance.wiremock.public_ip} ./ansible/playbook.yml --private-key=${var.aws_ssh_key_path} --extra-vars 'git_repo=${repo} git_branch=${branch}'"
+    command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ./ansible/playbook.yml --private-key=${var.aws_ssh_key_path} --extra-vars 'git_repo=${repo} git_branch=${branch}' -i ${aws_instance.wiremock.public_ip}, -u ${var.instance_user} -vvvv"
   }
 }
 

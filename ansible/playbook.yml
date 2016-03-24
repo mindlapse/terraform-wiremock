@@ -1,5 +1,7 @@
 ---
-- tasks:
+- hosts: all
+  sudo: yes
+  tasks:
 
   - name: Install docker
 
@@ -7,16 +9,21 @@
         name={{ item }}
         update_cache=yes
     with_items:
+        - python-pip
         - python-dev
         - python-setuptools
+        - build-essential
         - apt-transport-https
         - ca-certificates
-  - apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
-  - apt_repository: repo='deb https://apt.dockerproject.org/repo debian-stretch main' state=present filename='docker.list'
+  - apt_key:
+      keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+      id: "58118E89F3A912897C070ADBF76221572C52609D"
+      state: "present"
+  - apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-wily main' state=present
   - apt:
         name=docker-engine
         update_cache=yes
-    pip:
+  - pip:
         name=docker-py
         state=present
 
@@ -28,8 +35,9 @@
       name: wiremock
       image: mindlapse/wiremock
       state: started
-      expose:
-        - 443:443
+      ports:
+      - "443:443"
+      - "80:8080"
       env:
-        GIT_REPO: {{git_repo}}
-        GIT_BRANCH: {{git_branch}}
+        GIT_REPO: "{{git_repo}}"
+        GIT_BRANCH: "{{git_branch}}"

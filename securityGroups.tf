@@ -1,4 +1,4 @@
-resource "aws_security_group" "tls_group" {
+resource "aws_security_group" "web_group" {
   name = "tls_group"
   description = "A security group with port 443 open"
 
@@ -10,6 +10,21 @@ resource "aws_security_group" "tls_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // Allow ICMP (e.g. ping)
+  ingress {
+    from_port = -1
+    to_port = -1
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   // This is for outbound internet access
   egress {
     from_port = 0
@@ -18,6 +33,7 @@ resource "aws_security_group" "tls_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
 
 resource "aws_security_group" "ssh_group" {
   name = "ssh_group"
@@ -39,4 +55,11 @@ resource "aws_security_group" "ssh_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  // Allow ICMP (e.g. ping)
+  ingress {
+    from_port = -1
+    to_port = -1
+    protocol = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
