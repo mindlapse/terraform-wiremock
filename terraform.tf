@@ -23,6 +23,6 @@ resource "aws_eip" "ip" {
 
   provisioner "local-exec" {
     # The sleep is to wait for sshd to come online before attempting to provision (there must be a better way)
-    command = "echo 'Sleeping for 180 seconds... (the EC2 instance needs time to boot)' && sleep 180 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ${path.module}/ansible/playbook.yml --private-key=${var.aws_ssh_key_path} --extra-vars 'git_repo=${var.repo} git_branch=${var.branch}' -i ${aws_eip.ip.public_ip}, -u ${var.instance_user} -vvvv"
+    command = "echo 'Sleeping for 180 seconds... (the EC2 instance needs some time to get ready after waking up)' && sleep 180 && ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook ${path.module}/ansible/playbook.yml --private-key=${var.aws_ssh_key_path} --extra-vars 'git_repo=${var.repo} git_branch=${var.branch}' -i ${aws_eip.ip.public_ip}, -u ${var.instance_user} -vvvv"
   }
 }
